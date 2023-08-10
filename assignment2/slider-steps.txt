@@ -1,0 +1,9 @@
+Created a html page with image and 5 radio buttons
+When the document is ready,
+we want to run a function to change the image in a time interval
+using setInterval method in js we repeat the function in a particular interval
+I initialized a variable with value 1 for the couter for image
+I created a fucntion to change the image by incrementing the counter until it reach 6
+if it reaches 5 we want to have the value back to 1
+we change the src attribute of image using attr() method
+Like this we create a function to change the image on button click

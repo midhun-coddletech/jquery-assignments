@@ -1,0 +1,9 @@
+First I created the HTML page which has the form
+Then in the js file,
+When the DOM is loaded we create a function for validation
+created a for loop for putting values inside the age dropdown,
+using hide() hided the error message div in initial state
+created a function on form submit
+stored each input values to variables
+checked if length of each input text fields are not <0 so that it is not null,
+if its <1 the error message div is shown using show()
