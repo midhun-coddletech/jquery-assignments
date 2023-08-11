@@ -56,6 +56,4 @@ let productItems = [{
 }
 ];
 
-let cartItems = [
-
-];
+let cartItems = [];
