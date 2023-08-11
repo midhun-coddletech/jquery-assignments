@@ -38,7 +38,6 @@ $(document).ready(function () {
         $("#product-items-container").html("");
         let searchValue = $("#search-box").val().toLowerCase();
         let searchResult = false;
-
         for (let i = 0; i < productItems.length; i++) {
             let productId = productItems[i].id;
             let productName = productItems[i].productName;
@@ -60,6 +59,21 @@ $(document).ready(function () {
                     </div>`
                 );
             }
+            $(`#item${productId}`).click(function (){
+                let CartItemIndex = cartItems.findIndex(item => item.id === productId);
+                if (CartItemIndex !== -1) {
+                    cartItems[CartItemIndex].quantity += 1;
+                } else {
+                    cartItems.push({
+                        id: productId,
+                        productName: productName,
+                        price: productPrice,
+                        imageLink: imageLink,
+                        quantity: 1
+                    });
+                }
+                updateCart();
+            });
         }
         if (!searchResult) {
             $("#product-items-container").append(
@@ -113,8 +127,13 @@ $(document).ready(function () {
             $(`#decrement${productId}`).click(function(){
                 let CartItemIndex = cartItems.findIndex(item => item.id === productId);
                 if (CartItemIndex !== -1) {
-                    if(cartItems[CartItemIndex].quantity != 0) {
+                    if(cartItems[CartItemIndex].quantity > 0) {
                         cartItems[CartItemIndex].quantity -= 1;
+                        if (cartItems[CartItemIndex].quantity === 0){
+                            cartItems.splice(CartItemIndex,1);
+                            $('#cart-price').hide();
+                            $('#checkout-button').hide();
+                        }
                     }
                     updateCart();
                 }
@@ -123,6 +142,8 @@ $(document).ready(function () {
                 let CartItemIndex = cartItems.findIndex(item => item.id === productId);
                 if (CartItemIndex !== -1) {
                     cartItems.splice(CartItemIndex,1);
+                    $('#cart-price').hide();
+                    $('#checkout-button').hide();
                     updateCart();
                 }
             });

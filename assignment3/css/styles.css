@@ -22,15 +22,14 @@ header{
 }
 
 .search-box{
-    height: 30px;
-    width: 250px;
+    width: 400px;
+    height: 50px;
+    padding: 10px;
     border: none;
-}
-
-.search-button{
-    height: 30px;
-    width: 60px;
-    border: none;
+    margin-right: 10px;
+    background-color:  rgb(38, 43, 67);
+    color: white;
+    font-size: 15px;
 }
 
 .container{
