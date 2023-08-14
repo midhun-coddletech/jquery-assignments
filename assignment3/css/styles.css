@@ -13,7 +13,7 @@ header{
 }
 
 .nav{
-    max-width: 1350px;
+    max-width: 1450px;
     padding: 20px;
     margin: 0 auto;
     display: flex;
@@ -30,10 +30,11 @@ header{
     background-color:  rgb(38, 43, 67);
     color: white;
     font-size: 15px;
+    outline: none;
 }
 
 .container{
-    max-width: 1350px;
+    max-width: 1450px;
     margin: 0 auto;
     display: flex;
     min-height: 100vh;
@@ -48,6 +49,7 @@ header{
 
 .product-items-container{
     background-color: white;
+    justify-content: center;
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
@@ -57,7 +59,8 @@ header{
     flex: 3;
     display: grid;
     align-content: space-between;
-}
+    margin-top: 10px;
+}   
 
 .cart-page{
     background-color: rgb(251, 224, 174);
@@ -66,12 +69,12 @@ header{
     flex-direction: column;
     align-items: center;
     row-gap: 30px;
+    box-shadow: 0px 0px 10px rgba(154, 154, 154, 0.595);
 }
 
 .item-container{
-    margin: 20px;
     display: grid;
-    max-width: 200px;
+    max-width: 245px;
     padding: 10px;
     background-color: white;
     gap: 10px;
@@ -124,10 +127,11 @@ header{
     background-color: rgb(255, 158, 12);
     border: none;
     cursor: pointer;
+    margin-bottom: 30px;
 }
 
 .remove-cart-button{
-    padding: 5px;
+    padding: 5px 25px;
     color: white;
     background-color: rgb(208, 68, 65);
     border: none;
@@ -143,7 +147,7 @@ header{
 .cart{
     display: grid;
     justify-content: center;
-    row-gap: 20px;
+    row-gap: 10px;
 }
 
 .cart-items-container{
@@ -159,6 +163,7 @@ header{
 .quantity-container{
     display: grid;
     gap: 7px;
+    justify-items: center;
 }
 
 .cart-thumbnail-wrapper{

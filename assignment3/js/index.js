@@ -45,7 +45,7 @@ $(document).ready(function () {
             let productPrice = productItems[i].price;
             let productDescripton = productItems[i].productDescription;
             let imageLink = productItems[i].imageLink;
-            if (productLowerCase.includes(searchValue)) {
+            if (productLowerCase.startsWith(searchValue)) {
                 searchResult = true;
                 $("#product-items-container").append(
                     `<div class="item-container">
