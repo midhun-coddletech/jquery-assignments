@@ -16,7 +16,7 @@ $(document).ready(function () {
                     categories.push(element.category);
                 }
             });
-            $(document).on( "scroll", function () {
+            $(document).on( "scroll", function scrollPage() {
                 a = b;
                 b += 3;
                 if(b <= completeProducts.length){
@@ -24,6 +24,26 @@ $(document).ready(function () {
                     products = products.concat(products1);
                     console.log(products);
                     displayProducts(products1);
+                    $("#sort-items").on("change", function () {
+                        const sortOrder = $("#sort-items").val();
+                        const sortedProducts = sortProducts(completeProducts, sortOrder);
+                        $("#product-items-container").html("");
+                        displayProducts(sortedProducts);
+                    });
+                    $("#filter-items").on("change", function () {
+                        const selectedCategory = $("#filter-items").val();
+                        console.log(products);
+                        filteredProducts = completeProducts.filter(item => item.category === selectedCategory);
+                        $("#product-items-container").html("");
+                        if (selectedCategory === ''){
+                            filteredProducts = products;
+                            displayProducts(filteredProducts)
+                        }
+                        else{
+                            displayProducts(filteredProducts);
+                        }
+        
+                    });
                 }
               } );
             displayProducts(products);
@@ -51,7 +71,7 @@ $(document).ready(function () {
             });
             $("#sort-items").on("change", function () {
                 const sortOrder = $("#sort-items").val();
-                const sortedProducts = sortProducts(filteredProducts, sortOrder);
+                const sortedProducts = sortProducts(completeProducts, sortOrder);
                 $("#product-items-container").html("");
                 displayProducts(sortedProducts);
             });
