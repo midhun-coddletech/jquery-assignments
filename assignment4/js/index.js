@@ -3,16 +3,31 @@ $(document).ready(function () {
         url: "https://dummyjson.com/products",
         type: "GET",
         success: function (data) {
-            const products = data.products;
+            let categories = [];
             const cartItems = [];
             $("#cart-price").hide();
             $("#checkout-button").hide();
-            let categories = [];
-            products.forEach((element) => {
+            const completeProducts = data.products;
+            let products = completeProducts.slice(0,3);
+            let a = 0;
+            let b = 3;
+            completeProducts.forEach((element) => {
                 if (!categories.includes(element.category)) {
                     categories.push(element.category);
                 }
             });
+            $(document).on( "scroll", function scrollWindow () {
+                a = b;
+                b += 3;
+                if(b <= completeProducts.length){
+                    const products1 = completeProducts.slice(a,b);
+                    products = products.concat(products1);
+                    console.log(products);
+                    displayProducts(products1);
+                }
+              } );
+            displayProducts(products);
+            console.log(categories);
 
             categories.forEach((element) => {
                 $("#filter-items").append(
@@ -22,7 +37,8 @@ $(document).ready(function () {
             let filteredProducts = products; 
             $("#filter-items").on("change", function () {
                 const selectedCategory = $("#filter-items").val();
-                filteredProducts = products.filter(item => item.category === selectedCategory);
+                console.log(products);
+                filteredProducts = completeProducts.filter(item => item.category === selectedCategory);
                 $("#product-items-container").html("");
                 if (selectedCategory === ''){
                     filteredProducts = products;
@@ -31,20 +47,23 @@ $(document).ready(function () {
                 else{
                     displayProducts(filteredProducts);
                 }
+
             });
             $("#sort-items").on("change", function () {
                 const sortOrder = $("#sort-items").val();
-                const sortedProducts = sortProducts(filteredProducts, sortOrder);
+                const sortedProducts = sortProducts(completeProducts, sortOrder);
                 $("#product-items-container").html("");
                 displayProducts(sortedProducts);
             });
 
-            function sortProducts(products, sortOrder) {
-                return products.sort((a, b) => {
+            function sortProducts(filteredProducts, sortOrder) {
+                return filteredProducts.sort((a, b) => {
+                    let discountPricea = Math.round(a.price - a.price * (a.discountPercentage / 100));
+                    let discountPriceb = Math.round(b.price - b.price * (b.discountPercentage / 100));
                   if (sortOrder === "price-low") {
-                    return a.price - b.price;
+                    return discountPricea - discountPriceb;
                   } else if (sortOrder === "price-high") {
-                    return b.price - a.price;
+                    return discountPriceb - discountPricea;
                   } else if (sortOrder === "rating") {
                     return b.rating - a.rating;
                   }
@@ -53,7 +72,7 @@ $(document).ready(function () {
 
             function displayProducts(products) {
                 products.forEach((item) => {
-                    let discountPrice = Math.trunc(
+                    let discountPrice = Math.round(
                         item.price - item.price * (item.discountPercentage / 100)
                     );
                     $("#product-items-container").append(
@@ -159,7 +178,7 @@ $(document).ready(function () {
                                 updateCart();
                             }
                         });
-                        $("#cart-price").text(`Cart Total: ₹${cartTotal}`);
+                        $("#cart-price").text(`Cart Total: $${cartTotal}`);
                     });
                 }
                 $("#search-box").keyup(function () {
@@ -169,7 +188,7 @@ $(document).ready(function () {
                     products.forEach((item) => {
                         if (item.title.toLowerCase().startsWith(searchValue)) {
                             searchResult = true;
-                            let discountPrice = Math.trunc(
+                            let discountPrice = Math.round(
                                 item.price - item.price * (item.discountPercentage / 100)
                             );
                             $("#product-items-container").append(
@@ -217,7 +236,7 @@ $(document).ready(function () {
                     }
                 });
             }
-            displayProducts(products);
-        },
+
+        }
     });
 });
