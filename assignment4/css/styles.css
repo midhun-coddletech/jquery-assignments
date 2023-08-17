@@ -168,6 +168,27 @@ header{
     font-size: 25px;
 }
 
+.more-images{
+    padding: 20px;
+    display: grid;
+    gap: 2px;
+    grid-template-columns: repeat(3, 60px);
+    grid-template-rows: repeat(3, 60px);
+    flex:1;
+}
+
+.images-wrapper{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px gray solid;
+}
+
+.image{
+    max-height: 100%;
+    max-width: 100%;
+}
+
 .discount-price{
     font-weight: 600;
     font-size: 25px;
@@ -201,7 +222,6 @@ header{
 
 .add-cart-button{
     padding: 10px 20px;
-    border-radius: 5px;
     color: white;
     background-color: rgb(255, 158, 12);
     border: none;

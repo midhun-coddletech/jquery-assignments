@@ -8,9 +8,9 @@ $(document).ready(function () {
       $("#cart-price").hide();
       $("#checkout-button").hide();
       let completeProducts = data.products;
-      let products = completeProducts.slice(0, 3);
       let a = 0;
       let b = 3;
+      let products = completeProducts.slice(a, b);
       completeProducts.forEach((element) => {
         if (!categories.includes(element.category)) {
           categories.push(element.category);
@@ -35,20 +35,6 @@ $(document).ready(function () {
               products = products.concat(products1);
               console.log(products);
               displayProducts(products1);
-              $("#filter-items").on("change", function () {
-                const selectedCategory = $("#filter-items").val();
-                console.log(products);
-                filteredProducts = completeProducts.filter(
-                  (item) => item.category === selectedCategory
-                );
-                $("#product-items-container").html("");
-                if (selectedCategory === "") {
-                  filteredProducts = completeProducts;
-                  displayProducts(filteredProducts);
-                } else {
-                  displayProducts(filteredProducts);
-                }
-              });
             }
           }
         }
@@ -123,6 +109,7 @@ $(document).ready(function () {
                             <span class="product-rating">${item.rating} ★</span>
                             <p class="product-description">${item.description}</p>
                         </div>
+                        <div id="more-images${item.id}" class="more-images"></div>
                         <div class="price-info">
                             <p class="discount-price">$${discountPrice}</p>
                             <span class="og-price">$${item.price}</span>
@@ -132,6 +119,12 @@ $(document).ready(function () {
                         </div>
                     </div>`
           );
+          let itemImages = item.images;
+          for (let i = 0; i < itemImages.length; i += 1){
+            $(`#more-images${item.id}`).append(`<div class="images-wrapper">
+                                        <img class="image" src="${itemImages[i]}" alt="">
+                                      </div>`);
+          }
           $(`#item${item.id}`).click(function addtoCart() {
             let CartItemIndex = cartItems.findIndex(
               (element) => element.id === item.id
@@ -239,6 +232,7 @@ $(document).ready(function () {
                                 <span class="product-rating">${item.rating} ★</span>
                                 <p class="product-description">${item.description}</p>
                             </div>
+                            <div id="more-images${item.id}" class="more-images"></div>
                             <div class="price-info">
                                 <p class="discount-price">$${discountPrice}</p>
                                 <span class="og-price">$${item.price}</span>
@@ -248,6 +242,12 @@ $(document).ready(function () {
                             </div>
                         </div>`
               );
+              let itemImages = item.images;
+              for (let i = 0; i < itemImages.length; i += 1){
+                $(`#more-images${item.id}`).append(`<div class="images-wrapper">
+                                            <img class="image" src="${itemImages[i]}" alt="">
+                                          </div>`);
+              }
               $(`#item${item.id}`).click(function addtoCart() {
                 let CartItemIndex = cartItems.findIndex(
                   (element) => element.id === item.id
