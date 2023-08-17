@@ -1,110 +1,120 @@
 $(document).ready(function () {
-    $.ajax({
-        url: "https://dummyjson.com/products",
-        type: "GET",
-        success: function (data) {
-            let categories = [];
-            const cartItems = [];
-            $("#cart-price").hide();
-            $("#checkout-button").hide();
-            let completeProducts = data.products;
-            let products = completeProducts.slice(0,3);
-            let a = 0;
-            let b = 3;
-            completeProducts.forEach((element) => {
-                if (!categories.includes(element.category)) {
-                    categories.push(element.category);
-                }
-            });
-            function scrollPage() {
-                console.log($(document).height());
-                console.log($(window).height());
-                console.log($(window).scrollTop());
-                if(Math.ceil($(window).scrollTop()) === $(document).height() - $(window).height()){
-                    if($("#filter-items").val() === '' && ($("#search-box").val() === '')){
-                        a = b;
-                        b += 3;
-                        if(b <= completeProducts.length){
-                            const products1 = completeProducts.slice(a,b);
-                            products = products.concat(products1);
-                            console.log(products);
-                            displayProducts(products1);
-                            $("#filter-items").on("change", function () {
-                                const selectedCategory = $("#filter-items").val();
-                                console.log(products);
-                                filteredProducts = completeProducts.filter(item => item.category === selectedCategory);
-                                $("#product-items-container").html("");
-                                if (selectedCategory === ''){
-                                    filteredProducts = completeProducts;
-                                    displayProducts(filteredProducts)
-                                }
-                                else{
-                                    displayProducts(filteredProducts);
-                                }
-                            });
-                        }
-                    }
-                }
-              }
-            $(document).on("scroll",scrollPage);
-            displayProducts(products);
-            console.log(categories);
-
-            categories.forEach((element) => {
-                $("#filter-items").append(
-                    `<option value="${element}">${element}</option>`
-                );
-            });
-            let filteredProducts = []; 
-            $("#filter-items").on("change", function () {
+  $.ajax({
+    url: "https://dummyjson.com/products",
+    type: "GET",
+    success: function (data) {
+      let categories = [];
+      const cartItems = [];
+      $("#cart-price").hide();
+      $("#checkout-button").hide();
+      let completeProducts = data.products;
+      let products = completeProducts.slice(0, 3);
+      let a = 0;
+      let b = 3;
+      completeProducts.forEach((element) => {
+        if (!categories.includes(element.category)) {
+          categories.push(element.category);
+        }
+      });
+      function scrollPage() {
+        console.log($(document).height());
+        console.log($(window).height());
+        console.log($(window).scrollTop());
+        if (
+          Math.ceil($(window).scrollTop()) >=
+          $(document).height() - $(window).height()
+        ) {
+          if (
+            $("#filter-items").val() === "" &&
+            $("#search-box").val() === ""
+          ) {
+            a = b;
+            b += 3;
+            if (b <= completeProducts.length) {
+              const products1 = completeProducts.slice(a, b);
+              products = products.concat(products1);
+              console.log(products);
+              displayProducts(products1);
+              $("#filter-items").on("change", function () {
                 const selectedCategory = $("#filter-items").val();
                 console.log(products);
-                filteredProducts = completeProducts.filter(item => item.category === selectedCategory);
+                filteredProducts = completeProducts.filter(
+                  (item) => item.category === selectedCategory
+                );
                 $("#product-items-container").html("");
-                if (selectedCategory === ''){
-                    filteredProducts = products;
-                    displayProducts(filteredProducts)
+                if (selectedCategory === "") {
+                  filteredProducts = completeProducts;
+                  displayProducts(filteredProducts);
+                } else {
+                  displayProducts(filteredProducts);
                 }
-                else{
-                    displayProducts(filteredProducts);
-                }
+              });
+            }
+          }
+        }
+      }
+      $(document).on("scroll", scrollPage);
+      displayProducts(products);
+      console.log(categories);
 
-            });
-            $("#sort-items").on("change", function () {
-                const sortOrder = $("#sort-items").val();
-                if($("#filter-items").val() === ''){
-                    let sortedProducts = sortProducts(completeProducts, sortOrder);
-                    $("#product-items-container").html("");
-                    displayProducts(sortedProducts);
-                }
-                else{
-                    let sortedProducts = sortProducts(filteredProducts, sortOrder);
-                    $("#product-items-container").html("");
-                    displayProducts(sortedProducts);
-                }
-            });
+      categories.forEach((element) => {
+        $("#filter-items").append(
+          `<option value="${element}">${element}</option>`
+        );
+      });
+      let filteredProducts = [];
+      $("#filter-items").on("change", function () {
+        const selectedCategory = $("#filter-items").val();
+        console.log(products);
+        filteredProducts = completeProducts.filter(
+          (item) => item.category === selectedCategory
+        );
+        $("#product-items-container").html("");
+        if (selectedCategory === "") {
+          filteredProducts = products;
+          displayProducts(filteredProducts);
+        } else {
+          displayProducts(filteredProducts);
+        }
+      });
+      $("#sort-items").on("change", function () {
+        const sortOrder = $("#sort-items").val();
+        if ($("#filter-items").val() === "") {
+          let sortedProducts = sortProducts(completeProducts, sortOrder);
+          $("#product-items-container").html("");
+          displayProducts(sortedProducts);
+        } else {
+          let sortedProducts = sortProducts(filteredProducts, sortOrder);
+          $("#product-items-container").html("");
+          displayProducts(sortedProducts);
+        }
+      });
 
-            function sortProducts(filteredProducts, sortOrder) {
-                return filteredProducts.sort((a, b) => {
-                    let discountPricea = Math.round(a.price - a.price * (a.discountPercentage / 100));
-                    let discountPriceb = Math.round(b.price - b.price * (b.discountPercentage / 100));
-                  if (sortOrder === "price-low") {
-                    return discountPricea - discountPriceb;
-                  } else if (sortOrder === "price-high") {
-                    return discountPriceb - discountPricea;
-                  } else if (sortOrder === "rating") {
-                    return b.rating - a.rating;
-                  }
-                });
-              }
+      function sortProducts(filteredProducts, sortOrder) {
+        return filteredProducts.sort((a, b) => {
+          let discountPricea = Math.round(
+            a.price - a.price * (a.discountPercentage / 100)
+          );
+          let discountPriceb = Math.round(
+            b.price - b.price * (b.discountPercentage / 100)
+          );
+          if (sortOrder === "price-low") {
+            return discountPricea - discountPriceb;
+          } else if (sortOrder === "price-high") {
+            return discountPriceb - discountPricea;
+          } else if (sortOrder === "rating") {
+            return b.rating - a.rating;
+          }
+        });
+      }
 
-            function displayProducts(products) {
-                products.forEach((item) => {
-                    let discountPrice = Math.round(
-                        item.price - item.price * (item.discountPercentage / 100)
-                    );
-                    $("#product-items-container").append(
-                        `<div class="item-container">
+      function displayProducts(products) {
+        products.forEach((item) => {
+          let discountPrice = Math.round(
+            item.price - item.price * (item.discountPercentage / 100)
+          );
+          $("#product-items-container").append(
+            `<div class="item-container">
                         <div class="thumbnail-wrapper">
                             <img src="${item.thumbnail}" alt="Image of ${item.title}" class="thumbnail">
                         </div>
@@ -121,38 +131,38 @@ $(document).ready(function () {
                             <button id="item${item.id}" class="add-cart-button">Add to cart <i class="fa-solid fa-cart-shopping" style="color: #ffffff;"></i></button>
                         </div>
                     </div>`
-                    );
-                    $(`#item${item.id}`).click(function addtoCart() {
-                        let CartItemIndex = cartItems.findIndex(
-                            (element) => element.id === item.id
-                        );
-                        if (CartItemIndex !== -1) {
-                            cartItems[CartItemIndex].quantity += 1;
-                        } else {
-                            cartItems.push({
-                                id: item.id,
-                                productName: item.title,
-                                price: discountPrice,
-                                imageLink: item.thumbnail,
-                                quantity: 1,
-                            });
-                        }
-                        updateCart();
-                    });
-                });
-                function updateCart() {
-                    if (cartItems.length < 1) {
-                        $("#empty-cart").show();
-                    } else {
-                        $("#empty-cart").hide();
-                    }
-                    $("#cart").html("");
-                    let cartTotal = 0;
-                    cartItems.forEach((cart) => {
-                        let productTotal = cart.price * cart.quantity;
-                        cartTotal += productTotal;
-                        $("#cart").append(
-                            `<div class="cart-items-container">
+          );
+          $(`#item${item.id}`).click(function addtoCart() {
+            let CartItemIndex = cartItems.findIndex(
+              (element) => element.id === item.id
+            );
+            if (CartItemIndex !== -1) {
+              cartItems[CartItemIndex].quantity += 1;
+            } else {
+              cartItems.push({
+                id: item.id,
+                productName: item.title,
+                price: discountPrice,
+                imageLink: item.thumbnail,
+                quantity: 1,
+              });
+            }
+            updateCart();
+          });
+        });
+        function updateCart() {
+          if (cartItems.length < 1) {
+            $("#empty-cart").show();
+          } else {
+            $("#empty-cart").hide();
+          }
+          $("#cart").html("");
+          let cartTotal = 0;
+          cartItems.forEach((cart) => {
+            let productTotal = cart.price * cart.quantity;
+            cartTotal += productTotal;
+            $("#cart").append(
+              `<div class="cart-items-container">
                                     <div class="cart-thumbnail-wrapper">
                                         <img class="cart-thumbnail" id="cart-thumbnail" src="${cart.imageLink}" alt="Image of ${cart.productName}">
                                     </div>
@@ -167,60 +177,60 @@ $(document).ready(function () {
                                         </span>
                                     </div>
                                 </div>`
-                        );
-                        $("#cart-price").show();
-                        $("#checkout-button").show();
-                        $(`#increment${cart.id}`).click(function () {
-                            let CartItemIndex = cartItems.findIndex(
-                                (item) => item.id === cart.id
-                            );
-                            if (CartItemIndex !== -1) {
-                                cartItems[CartItemIndex].quantity += 1;
-                                updateCart();
-                            }
-                        });
-                        $(`#decrement${cart.id}`).click(function () {
-                            let CartItemIndex = cartItems.findIndex(
-                                (item) => item.id === cart.id
-                            );
-                            if (CartItemIndex !== -1) {
-                                if (cartItems[CartItemIndex].quantity > 0) {
-                                    cartItems[CartItemIndex].quantity -= 1;
-                                    if (cartItems[CartItemIndex].quantity === 0) {
-                                        cartItems.splice(CartItemIndex, 1);
-                                        $("#cart-price").hide();
-                                        $("#checkout-button").hide();
-                                    }
-                                }
-                                updateCart();
-                            }
-                        });
-                        $(`#remove-item${cart.id}`).click(function () {
-                            let CartItemIndex = cartItems.findIndex(
-                                (item) => item.id === cart.id
-                            );
-                            if (CartItemIndex !== -1) {
-                                cartItems.splice(CartItemIndex, 1);
-                                $("#cart-price").hide();
-                                $("#checkout-button").hide();
-                                updateCart();
-                            }
-                        });
-                        $("#cart-price").text(`Cart Total: $${cartTotal}`);
-                    });
+            );
+            $("#cart-price").show();
+            $("#checkout-button").show();
+            $(`#increment${cart.id}`).click(function () {
+              let CartItemIndex = cartItems.findIndex(
+                (item) => item.id === cart.id
+              );
+              if (CartItemIndex !== -1) {
+                cartItems[CartItemIndex].quantity += 1;
+                updateCart();
+              }
+            });
+            $(`#decrement${cart.id}`).click(function () {
+              let CartItemIndex = cartItems.findIndex(
+                (item) => item.id === cart.id
+              );
+              if (CartItemIndex !== -1) {
+                if (cartItems[CartItemIndex].quantity > 0) {
+                  cartItems[CartItemIndex].quantity -= 1;
+                  if (cartItems[CartItemIndex].quantity === 0) {
+                    cartItems.splice(CartItemIndex, 1);
+                    $("#cart-price").hide();
+                    $("#checkout-button").hide();
+                  }
                 }
-                $("#search-box").keyup(function () {
-                    $("#product-items-container").html("");
-                    let searchValue = $("#search-box").val().toLowerCase();
-                    let searchResult = false;
-                    completeProducts.forEach((item) => {
-                        if (item.title.toLowerCase().startsWith(searchValue)) {
-                            searchResult = true;
-                            let discountPrice = Math.round(
-                                item.price - item.price * (item.discountPercentage / 100)
-                            );
-                            $("#product-items-container").append(
-                                `<div class="item-container">
+                updateCart();
+              }
+            });
+            $(`#remove-item${cart.id}`).click(function () {
+              let CartItemIndex = cartItems.findIndex(
+                (item) => item.id === cart.id
+              );
+              if (CartItemIndex !== -1) {
+                cartItems.splice(CartItemIndex, 1);
+                $("#cart-price").hide();
+                $("#checkout-button").hide();
+                updateCart();
+              }
+            });
+            $("#cart-price").text(`Cart Total: $${cartTotal}`);
+          });
+        }
+        $("#search-box").keyup(function () {
+          $("#product-items-container").html("");
+          let searchValue = $("#search-box").val().toLowerCase();
+          let searchResult = false;
+          completeProducts.forEach((item) => {
+            if (item.title.toLowerCase().startsWith(searchValue)) {
+              searchResult = true;
+              let discountPrice = Math.round(
+                item.price - item.price * (item.discountPercentage / 100)
+              );
+              $("#product-items-container").append(
+                `<div class="item-container">
                             <div class="thumbnail-wrapper">
                                 <img src="${item.thumbnail}" alt="Image of ${item.title}" class="thumbnail">
                             </div>
@@ -237,34 +247,33 @@ $(document).ready(function () {
                                 <button id="item${item.id}" class="add-cart-button">Add to cart <i class="fa-solid fa-cart-shopping" style="color: #ffffff;"></i></button>
                             </div>
                         </div>`
-                            );
-                            $(`#item${item.id}`).click(function addtoCart() {
-                                let CartItemIndex = cartItems.findIndex(
-                                    (element) => element.id === item.id
-                                );
-                                if (CartItemIndex !== -1) {
-                                    cartItems[CartItemIndex].quantity += 1;
-                                } else {
-                                    cartItems.push({
-                                        id: item.id,
-                                        productName: item.title,
-                                        price: discountPrice,
-                                        imageLink: item.thumbnail,
-                                        quantity: 1,
-                                    });
-                                }
-                                updateCart();
-                            });
-                        }
-                    });
-                    if (!searchResult) {
-                        $("#product-items-container").append(
-                            '<p class="no-results">No results found</p>'
-                        );
-                    }
-                });
+              );
+              $(`#item${item.id}`).click(function addtoCart() {
+                let CartItemIndex = cartItems.findIndex(
+                  (element) => element.id === item.id
+                );
+                if (CartItemIndex !== -1) {
+                  cartItems[CartItemIndex].quantity += 1;
+                } else {
+                  cartItems.push({
+                    id: item.id,
+                    productName: item.title,
+                    price: discountPrice,
+                    imageLink: item.thumbnail,
+                    quantity: 1,
+                  });
+                }
+                updateCart();
+              });
             }
-
-        }
-    });
+          });
+          if (!searchResult) {
+            $("#product-items-container").append(
+              '<p class="no-results">No results found</p>'
+            );
+          }
+        });
+      }
+    },
+  });
 });
