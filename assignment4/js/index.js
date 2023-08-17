@@ -7,7 +7,7 @@ $(document).ready(function () {
             const cartItems = [];
             $("#cart-price").hide();
             $("#checkout-button").hide();
-            const completeProducts = data.products;
+            let completeProducts = data.products;
             let products = completeProducts.slice(0,3);
             let a = 0;
             let b = 3;
@@ -16,36 +16,37 @@ $(document).ready(function () {
                     categories.push(element.category);
                 }
             });
-            $(document).on( "scroll", function scrollPage() {
-                a = b;
-                b += 3;
-                if(b <= completeProducts.length){
-                    const products1 = completeProducts.slice(a,b);
-                    products = products.concat(products1);
-                    console.log(products);
-                    displayProducts(products1);
-                    $("#sort-items").on("change", function () {
-                        const sortOrder = $("#sort-items").val();
-                        const sortedProducts = sortProducts(completeProducts, sortOrder);
-                        $("#product-items-container").html("");
-                        displayProducts(sortedProducts);
-                    });
-                    $("#filter-items").on("change", function () {
-                        const selectedCategory = $("#filter-items").val();
-                        console.log(products);
-                        filteredProducts = completeProducts.filter(item => item.category === selectedCategory);
-                        $("#product-items-container").html("");
-                        if (selectedCategory === ''){
-                            filteredProducts = products;
-                            displayProducts(filteredProducts)
+            function scrollPage() {
+                console.log($(document).height());
+                console.log($(window).height());
+                console.log($(window).scrollTop());
+                if(Math.ceil($(window).scrollTop()) === $(document).height() - $(window).height()){
+                    if($("#filter-items").val() === '' && ($("#search-box").val() === '')){
+                        a = b;
+                        b += 3;
+                        if(b <= completeProducts.length){
+                            const products1 = completeProducts.slice(a,b);
+                            products = products.concat(products1);
+                            console.log(products);
+                            displayProducts(products1);
+                            $("#filter-items").on("change", function () {
+                                const selectedCategory = $("#filter-items").val();
+                                console.log(products);
+                                filteredProducts = completeProducts.filter(item => item.category === selectedCategory);
+                                $("#product-items-container").html("");
+                                if (selectedCategory === ''){
+                                    filteredProducts = completeProducts;
+                                    displayProducts(filteredProducts)
+                                }
+                                else{
+                                    displayProducts(filteredProducts);
+                                }
+                            });
                         }
-                        else{
-                            displayProducts(filteredProducts);
-                        }
-        
-                    });
+                    }
                 }
-              } );
+              }
+            $(document).on("scroll",scrollPage);
             displayProducts(products);
             console.log(categories);
 
@@ -71,9 +72,16 @@ $(document).ready(function () {
             });
             $("#sort-items").on("change", function () {
                 const sortOrder = $("#sort-items").val();
-                const sortedProducts = sortProducts(completeProducts, sortOrder);
-                $("#product-items-container").html("");
-                displayProducts(sortedProducts);
+                if($("#filter-items").val() === ''){
+                    let sortedProducts = sortProducts(completeProducts, sortOrder);
+                    $("#product-items-container").html("");
+                    displayProducts(sortedProducts);
+                }
+                else{
+                    let sortedProducts = sortProducts(filteredProducts, sortOrder);
+                    $("#product-items-container").html("");
+                    displayProducts(sortedProducts);
+                }
             });
 
             function sortProducts(filteredProducts, sortOrder) {
@@ -205,7 +213,7 @@ $(document).ready(function () {
                     $("#product-items-container").html("");
                     let searchValue = $("#search-box").val().toLowerCase();
                     let searchResult = false;
-                    products.forEach((item) => {
+                    completeProducts.forEach((item) => {
                         if (item.title.toLowerCase().startsWith(searchValue)) {
                             searchResult = true;
                             let discountPrice = Math.round(
